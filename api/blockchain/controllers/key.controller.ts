@@ -6,18 +6,7 @@ import { KeyService } from "../services/key.service";
 const keyService = new KeyService();
 
 export class KeyController {
-  /**
-   * POST /keys
-   * Body: { userId, publicKey, encryptedPrivateKey, meta: { iv, salt, scheme } }
-   *
-   * The client has already:
-   *   1. Generated the keypair locally
-   *   2. Encrypted the private key with a PIN-derived key
-   *   3. Sent only the encrypted blob + metadata here
-   *
-   * The server validates the public key is a real Ed25519 Solana address
-   * and stores the encrypted blob — it never sees the plaintext private key.
-   */
+
   createKeyPair = async (req: Request, res: Response) => {
     try {
       const { farmerId, publicKey, encryptedPrivateKey, meta } = req.body;
@@ -29,14 +18,12 @@ export class KeyController {
         });
       }
 
-      // meta must contain iv and scheme at minimum
       if (!meta.iv || !meta.scheme) {
         return res.status(HTTPStatus.BAD_REQUEST).json({
           message: "meta must contain at least { iv, scheme }",
         });
       }
 
-      // Validate that the public key is a legitimate Solana address
       const isValid = await keyService.isValidSolanaPublicKey(publicKey);
       if (!isValid) {
         return res.status(HTTPStatus.BAD_REQUEST).json({
@@ -44,7 +31,6 @@ export class KeyController {
         });
       }
 
-      // Check for duplicate publicKey
       const existing = await prisma.farmerKeys.findUnique({
         where: { publicKey },
       });
@@ -54,7 +40,6 @@ export class KeyController {
         });
       }
 
-      // Store — server is zero-knowledge, just a safe deposit box
       const record = await prisma.farmerKeys.create({
         data: {
           farmerId: farmerId,
@@ -81,13 +66,7 @@ export class KeyController {
     }
   };
 
-  /**
-   * PUT /keys/:publicKey/rotate
-   * Body: { encryptedPrivateKey, meta: { iv, salt, scheme } }
-   *
-   * Replaces the encrypted blob for an existing public key.
-   * Same public key, new encryption (e.g. PIN change).
-   */
+
   rotateKeys = async (req: Request, res: Response) => {
     try {
       const { publicKey } = req.params;

@@ -1,20 +1,3 @@
-/**
- * ageisClient.ts
- * ────────────────────────────────────────────────────────────────────────────
- * Full TypeScript client for the `ageis` Anchor program.
- *
- * Program ID: 4fRvr5yrDNTqnSXv8yFb9CSj3MwnYuade8UUmgb8cg3H
- *
- * Dependencies (install before use):
- *   npm install @coral-xyz/anchor @solana/web3.js @solana/spl-token
- *
- * Fix applied: Metaplex metadata field-length validation
- *   - NFT name      → max 32 chars  (auto-truncated with warning)
- *   - NFT symbol    → max 10 chars  (hardcoded as "" — safe)
- *   - metadataUri   → max 200 chars (throws if exceeded)
- * ────────────────────────────────────────────────────────────────────────────
- */
-
 import * as anchor from "@coral-xyz/anchor";
 import { Program, AnchorProvider, BN, web3 } from "@coral-xyz/anchor";
 import {
@@ -30,8 +13,6 @@ import {
   ASSOCIATED_TOKEN_PROGRAM_ID,
 } from "@solana/spl-token";
 
-// ─── Constants ───────────────────────────────────────────────────────────────
-
 export const PROGRAM_ID = new PublicKey(
   "4fRvr5yrDNTqnSXv8yFb9CSj3MwnYuade8UUmgb8cg3H"
 );
@@ -40,7 +21,6 @@ export const TOKEN_METADATA_PROGRAM_ID = new PublicKey(
   "metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s"
 );
 
-/** Metaplex hard limits for on-chain metadata fields */
 const METAPLEX_NAME_MAX_LEN = 32;
 const METAPLEX_URI_MAX_LEN = 200;
 const METAPLEX_SYMBOL_MAX_LEN = 10;
