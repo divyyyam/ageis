@@ -9,13 +9,11 @@ let cachedClient: AgeisClient | null = null;
 function parseSecretKey(raw: string): Uint8Array {
   const trimmed = raw.trim();
 
-  // JSON array: [1,2,3,...]
   if (trimmed.startsWith("[")) {
     const arr = JSON.parse(trimmed) as number[];
     return Uint8Array.from(arr);
   }
 
-  // CSV: 1,2,3,...
   if (trimmed.includes(",")) {
     const arr = trimmed
       .split(",")
@@ -25,13 +23,10 @@ function parseSecretKey(raw: string): Uint8Array {
     return Uint8Array.from(arr);
   }
 
-  // Base58: typical Solana secret key export
   return bs58.decode(trimmed);
 }
 
 function loadIdl(): unknown {
-  // The IDL is generated under `api/blockchain/target/idl/ageis.json`.
-  // `tsc` does not copy JSON into `dist/`, so we load from the project cwd.
   const candidates = [
     path.resolve(process.cwd(), "blockchain/target/idl/ageis.json"),
     path.resolve(process.cwd(), "api/blockchain/target/idl/ageis.json"),
