@@ -53,7 +53,6 @@ app.get("/", async (req: Request, res: Response) => {
 
 
 
-//farmer routes
 app.use("/api/farmer/auth", farmerAuthRouter)
 app.use("/api/farmer/keys", keyRouter)
 app.use("/api/farmer-profile", farmerProfileRouter)
@@ -61,10 +60,8 @@ app.use("/api/farmer/products", productRouter)
 app.use("/api/farmer/orders", farmerOrderRouter)
 app.use("/api/farmer/delivery", deliveryRouter)
 app.use("/api/farmer/nfc", farmerNFCRouter)
-//gemini verification route
 app.use("/api/farmer", router)
 
-// public metadata endpoint for Solana NFT metadata_uri
 app.get("/api/metadata/products/:id", async (req: Request, res: Response) => {
     try {
         const { id } = req.params
@@ -107,10 +104,6 @@ app.get("/api/metadata/products/:id", async (req: Request, res: Response) => {
 })
 
 
-
-
-
-//user routes
 app.use("/api/user/auth", userAuthRouter)
 app.use("/api/user/keys", userKeyRouter)
 app.use("/api/user/profile", userProfileRouter)
@@ -119,13 +112,6 @@ app.use("/api/user/order", userOrderRouter)
 app.use("/api/user/nfc", userNFCRouter)
 
 
-
-
-
-
-
-
-//server
 app.listen(port, () => {
     console.log("Server started on :", port);
 })
